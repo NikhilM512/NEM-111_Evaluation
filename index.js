@@ -64,10 +64,10 @@ app.post("/login",async (req,res)=>{
         const usersArr=await UserModel.find({email})
         if(usersArr.length>0){
             const hidden_password=usersArr[0].password;
-            bcrypt.compare(password,hidden_password,function(err,res){
-                if(res){
-                    const token=jwt.sign({"userID":usersArr[0]._id},process.env.SECRET_KEY);
-                    res.send("Login SuccessFull")
+            bcrypt.compare(password,hidden_password,function(err,result){
+                if(result){
+                    const token=jwt.sign({"userID":usersArr[0]._id},'hush');
+                    res.send({"Status":"Login SuccessFull","token":token})
                 }else{
                     console.log("Login Failed");
                 }
@@ -79,7 +79,7 @@ app.post("/login",async (req,res)=>{
 })
 
 app.use(authenticate)
-app.use("/notes", todosRouter)
+app.use("/todos", todosRouter)
 
 app.listen(7894,async()=>{
     try {
